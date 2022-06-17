@@ -180,8 +180,8 @@ int sizeh(){
 void xprintq(){
 	Header* p;
     for(p=freep;;p=p->s.ptr){
-        fprintf(stdout,"%p  %ld\n",p,p->s.size);
-        if(p==freep) break;
+        fprintf(stdout,"%p  %lu\n",p,p->s.size);
+        if(p->s.ptr==freep) break;
     }
     printf("\n");
 }
