@@ -15,7 +15,7 @@ test_xalloc: $(OBJS_XALL)
 	$(CC) $(CFLAGS) -o $@ $(OBJS_XALL)
 
 xrun: $(OBJS_XRUN)
-	$(CC) $(CFLAGS) -o $@ $(OBJS_XRUN)
+	$(CC) $(CFLAGS) -o $@ $(OBJS_XRUN) -lm
 
 
 #

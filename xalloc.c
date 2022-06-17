@@ -90,7 +90,7 @@ void *xmalloc (size_t nbytes)
 	/* En la primera llamada se construye una lista de huecos con un
 	   unico elemento de tama~no cero (base) que se apunta a si mismo */
 	if (( prevp = freep) == NULL ) { /* no free list yet */
-		base.s.ptr = freep = prevp = & base; 
+		base.s.ptr = freep = prevp = & base; // esto se cumple porque freep es una variable "static" , por eso solamente serà NULL en la primera llamada
 		base.s.size = 0;
 	}
 
@@ -105,8 +105,8 @@ void *xmalloc (size_t nbytes)
 				prevp->s.ptr = p->s.ptr;
 			else {  /* allocate tail end */
 				p->s.size -= nunits;
-				p+= p->s.size;
-				p->s.size = nunits;
+				p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes
+				p->s.size = nunits;//le asigna su nuevo tamaño
 			}
 			freep = prevp; /* estrategia next-fit */
 			return (void *)(p+1); /* devuelve un puntero a la
