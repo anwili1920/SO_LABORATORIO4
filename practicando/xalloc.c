@@ -183,9 +183,9 @@ void xfree(void *ap)
 void *xrealloc(void * ptr, size_t size)
 {
 	Header  *p ;
-	
-	p= (header*)ptr;// lo casteo  
-	if(p.s.size>size){//consiste en disminuir
+	size_t tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align) +1;
+	p= (Header*)ptr;// lo casteo  
+	if(p->s.size>size){//consiste en disminuir
 		// se debe cumplir lo del hueco tamaño minimo, y debo compactarlo si es adyacente a un espacio 
 		size_t tamEspacio= (p->s.size-size)*sizeof(Align),minimotam= sizeof(Header)+1;   //Aqui lo que quede en p->s.size será el espacio que sobra
 			if(tamEspacio >= minimotam){ // si dicho tamaño es mayor o igual al espacio mínimo permitido, entonces se ejecuta todo normal
@@ -194,7 +194,7 @@ void *xrealloc(void * ptr, size_t size)
 				p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
 				p->s.size = size;//le asigna su nuevo tamaño
 			}else{ // en este punto debo verificar si se puede o no compactar con un adyacente
-				if (/*preguntar condicion*/) { // si se puede compactar los uno
+				if (/*preguntar condicion*/ p==NULL) { // si se puede compactar los uno
 					p->s.size -= size;
 					p+= (p->s.size/tam1HeadUAlign);// muevo el puntero 
 					p->s.ptr-= (p->s.size/tam1HeadUAlign);// ahora el siguiente comienza desde antes
@@ -205,7 +205,7 @@ void *xrealloc(void * ptr, size_t size)
 			}
 		
 	}else{//consiste en aumentar tamaño
-		
+
 		return p;
 	}
 	return NULL;
