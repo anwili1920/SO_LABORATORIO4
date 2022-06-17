@@ -73,9 +73,9 @@ static Header *morecore(size_t nu)
 		return NULL;
 	up = (Header *) cp; // el casteo es header porque va a ocupar un bloque de tamaño header
 	up ->s.size = nu; // ya se guarda en unidades align
-	//xfree((void *)(up+1));//originalmente estaba en unidades cabecera
+	xfree((void *)(up+1));//originalmente estaba en unidades cabecera
 	size_t head = (sizeof(Header)+sizeof(Align)-1)/sizeof(Align); // una cabeza en unidades Align
-	xfree((void *)(up+head));
+	//xfree((void *)(up+head));
 	return freep;
 }
 
