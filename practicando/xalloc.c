@@ -83,7 +83,7 @@ static Header *morecore(size_t nu)
 void *xmalloc (size_t nbytes)
 {
 	Header  *p, *prevp;
-	size_t nunits,tamHeadUAlign;
+	size_t nunits,tam1HeadUAlign;
 
 	/* 
 	   Calcula cuanto ocupara la peticion medido en tama~nos de
@@ -92,7 +92,7 @@ void *xmalloc (size_t nbytes)
 	   El termino "+ tamHeadUAlign" es para incluir la propia cabecera.
 	*/
 	//nunits = (nbytes+sizeof(Header)-1)/sizeof(Header) + 1; //original en unidades cabecera
-	  tamHeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
+	  tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
 	  nunits = (nbytes+sizeof(Align)-1)/sizeof(Align) + tamHeadUAlign;
 
 	/* En la primera llamada se construye una lista de huecos con un
@@ -113,7 +113,9 @@ void *xmalloc (size_t nbytes)
 				prevp->s.ptr = p->s.ptr;
 			else {  /* allocate tail end */
 				p->s.size -= nunits;
-				p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes
+				//p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes en unidades cabecera
+				tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
+				p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
 				p->s.size = nunits;//le asigna su nuevo tamaño
 			}
 			freep = prevp; /* estrategia next-fit */
