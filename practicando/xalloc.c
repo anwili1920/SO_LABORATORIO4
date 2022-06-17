@@ -206,7 +206,7 @@ void *xrealloc(void * ptr, size_t size)
 			}
 		
 	}else{//consiste en aumentar tamaño
-
+		
 		return p;
 	}
 	return NULL;

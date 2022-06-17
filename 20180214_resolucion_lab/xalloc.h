@@ -19,6 +19,7 @@
 void *xmalloc(size_t size);
 void *xrealloc(void * ptr, size_t size);
 void xfree(void * ptr);
-
+int size(void*ptr);
+int sizeh();
 #endif
 

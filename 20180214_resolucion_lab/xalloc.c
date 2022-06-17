@@ -169,3 +169,11 @@ void *xrealloc(void * ptr, size_t size)
 {
 	return NULL;
 }
+int size(void*ptr){
+	Header *p;
+	p=(Header *) ptr-1;
+	return p->s.size;
+}
+int sizeh(){
+	return sizeof(Header);
+}
