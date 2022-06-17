@@ -12,7 +12,7 @@
 #define xmalloc(s) malloc(s)
 #define xrealloc(p, s) realloc(p, s)
 #define xfree(p) free(p)
-
+ 
 #else
 
 #include <stddef.h>
@@ -21,5 +21,6 @@ void *xrealloc(void * ptr, size_t size);
 void xfree(void * ptr);
 int size(void*ptr);
 int sizeh();
+void xprintq();
 #endif
 
