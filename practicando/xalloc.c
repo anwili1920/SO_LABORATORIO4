@@ -83,7 +83,7 @@ static Header *morecore(size_t nu)
 void *xmalloc (size_t nbytes)
 {
 	Header  *p, *prevp;
-	size_t nunits,tam1HeadUAlign;
+	size_t nunits,tam1HeadUAlign,minimotam;
 
 	/* 
 	   Calcula cuanto ocupara la peticion medido en tama~nos de
@@ -111,12 +111,16 @@ void *xmalloc (size_t nbytes)
 		if (p->s.size >= nunits) {  /* big enough */
 			if (p->s.size == nunits)  /* exactly */
 				prevp->s.ptr = p->s.ptr;
-			else {  /* allocate tail end */
-				p->s.size -= nunits;
-				//p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes en unidades cabecera
-				
-				p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
-				p->s.size = nunits;//le asigna su nuevo tamaño
+			else {  /* allocate tail end  */ // AQUI ES DONDE COMIENZA EL PUNTO 2
+				size_t tamEspacio= p->s.size-nunits; //punto 2: Aqui lo que quede en p->s.size será el espacio que sobra
+				if(tamEspacio >= minimotam){//punto 2: si dicho tamaño es mayor o igual al espacio mínimo permitido, entonces se ejecuta todo normal
+					p->s.size -= nunits;
+					//p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes en unidades cabecera
+					p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
+					p->s.size = nunits;//le asigna su nuevo tamaño
+				}else{// de no poder generarse el espacio minimo necesario, entonces se ocupa todo
+					prevp->s.ptr = p->s.ptr;
+				}
 			}
 			freep = prevp; /* estrategia next-fit */
 			return (void *)(p+1); /* se modifica ??? devuelve un puntero a la
