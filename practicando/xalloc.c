@@ -74,7 +74,7 @@ static Header *morecore(size_t nu)
 	up = (Header *) cp; // el casteo es header porque va a ocupar un bloque de tamaño header
 	up ->s.size = nu; // ya se guarda en unidades align
 	//xfree((void *)(up+1));//originalmente estaba en unidades cabecera
-	size_t head = (sizeof(Header)+sizeof(Align)-1)/sizeof(Align); // una cabeza en unidades Align
+	size_t head = (sizeof(Header)+sizeof(Align)-1)/sizeof(Align) +1 ; // una cabeza en unidades Align
 	xfree((void *)(up+head));
 	return freep;
 }
@@ -92,7 +92,7 @@ void *xmalloc (size_t nbytes)
 	   El termino "+ tamHeadUAlign" es para incluir la propia cabecera.
 	*/
 	//nunits = (nbytes+sizeof(Header)-1)/sizeof(Header) + 1; //original en unidades cabecera
-	  tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
+	  tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align) +1;
 	  nunits = (nbytes+sizeof(Align)-1)/sizeof(Align) + tam1HeadUAlign;
 
 	/* En la primera llamada se construye una lista de huecos con un
@@ -135,7 +135,7 @@ void *xmalloc (size_t nbytes)
 void xfree(void *ap)
 {
 	Header *bp, *p;
-	size_t tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
+	size_t tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align) +1;
 	//bp = (Header *)ap - 1;  /* point to block header */ // unidades cabecera 
 	bp = (Header *)ap - tam1HeadUAlign; // unidades align
 	/*
