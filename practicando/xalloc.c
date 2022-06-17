@@ -93,7 +93,7 @@ void *xmalloc (size_t nbytes)
 	*/
 	//nunits = (nbytes+sizeof(Header)-1)/sizeof(Header) + 1; //original en unidades cabecera
 	  tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
-	  nunits = (nbytes+sizeof(Align)-1)/sizeof(Align) + tamHeadUAlign;
+	  nunits = (nbytes+sizeof(Align)-1)/sizeof(Align) + tam1HeadUAlign;
 
 	/* En la primera llamada se construye una lista de huecos con un
 	   unico elemento de tama~no cero (base) que se apunta a si mismo */
