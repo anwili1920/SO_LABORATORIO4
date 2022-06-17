@@ -136,8 +136,8 @@ void xfree(void *ap)
 {
 	Header *bp, *p;
 	size_t tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
-	bp = (Header *)ap - 1;  /* point to block header */
-
+	//bp = (Header *)ap - 1;  /* point to block header */ // unidades cabecera 
+	bp = (Header *)ap - tam1HeadUAlign; // unidades align
 	/*
 	   Bucle que recorre la lista de huecos para buscar el hueco
 	   anterior al bloque que se va a liberar.
