@@ -61,14 +61,21 @@ static Header *morecore(size_t nu)
 	char *cp;
 	Header *up;
 
-	if (nu < NALLOC)	
-		nu = NALLOC;
-	cp= sbrk(nu * sizeof(Header));
+	if (nu < NALLOC){
+		//nu = NALLOC; //originalmente estaba en unidades cabecera
+		// NALLOC*sizeof(Header) : cantidad de bytes
+		nu= ((NALLOC*sizeof(Header))+sizeof(Align)-1)/sizeof(Align);
+	}	
+		
+	//cp= sbrk(nu * sizeof(Header)); //originalmente estaba en unidades cabecera
+	cp= sbrk(nu * sizeof(Align));
 	if (cp == (char *) -1) /* no space at all */
 		return NULL;
-	up = (Header *) cp;
-	up ->s.size = nu;
-	xfree((void *)(up+1));
+	up = (Header *) cp; // el casteo es header porque va a ocupar un bloque de tamaño header
+	up ->s.size = nu; // ya se guarda en unidades align
+	//xfree((void *)(up+1));//originalmente estaba en unidades cabecera
+	size_t head = (sizeof(Header)+sizeof(Align)-1)/sizeof(Align); // una cabeza en unidades Align
+	xfree((void *)(up+head));
 	return freep;
 }
 
@@ -76,16 +83,17 @@ static Header *morecore(size_t nu)
 void *xmalloc (size_t nbytes)
 {
 	Header  *p, *prevp;
-	size_t nunits;
+	size_t nunits,tamHeadUAlign;
 
 	/* 
 	   Calcula cuanto ocupara la peticion medido en tama~nos de
 	   cabecera (incluyendo la propia cabecera). 
-	   El termino "sizeof(Header)-1" provoca un redondeo por exceso.
-	   El termino "+ 1" es para incluir la propia cabecera.
+	   El termino "sizeof(Align)-1" provoca un redondeo por exceso.
+	   El termino "+ tamHeadUAlign" es para incluir la propia cabecera.
 	*/
-	nunits = (nbytes+sizeof(Header)-1)/sizeof(Header) + 1;
-
+	//nunits = (nbytes+sizeof(Header)-1)/sizeof(Header) + 1; //original en unidades cabecera
+	  tamHeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
+	  nunits = (nbytes+sizeof(Align)-1)/sizeof(Align) + tamHeadUAlign;
 
 	/* En la primera llamada se construye una lista de huecos con un
 	   unico elemento de tama~no cero (base) que se apunta a si mismo */
@@ -109,7 +117,7 @@ void *xmalloc (size_t nbytes)
 				p->s.size = nunits;//le asigna su nuevo tamaño
 			}
 			freep = prevp; /* estrategia next-fit */
-			return (void *)(p+1); /* devuelve un puntero a la
+			return (void *)(p+1); /* se modifica ??? devuelve un puntero a la
 						 zona de datos del bloque */
 		}
 		/* Si ha dado toda la vuelta pide mas memoria y vuelve
