@@ -200,6 +200,7 @@ void *xrealloc(void * ptr, size_t size)
 					p->s.ptr-= (p->s.size/tam1HeadUAlign);// ahora el siguiente comienza desde antes
 					p->s.ptr->s.size += (p->s.size/tam1HeadUAlign);// le agrego tamaño al adyacente
 					p->s.size = size;//le asigna su nuevo tamaño
+					freep = p; 
 					return p;
 				}else return p; // de no poder generarse el espacio minimo necesario ni compactarlo, entonces se mantiene el tamaño
 			}
