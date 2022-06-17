@@ -177,3 +177,6 @@ int size(void*ptr){
 int sizeh(){
 	return sizeof(Header);
 }
+void xprintq(){
+	
+}
