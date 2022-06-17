@@ -179,7 +179,7 @@ int sizeh(){
 }
 void xprintq(){
 	Header* p;
-    for(p=freep->s.ptr;;p=p->s.ptr){
+    for(p=freep;;p=p->s.ptr){
         fprintf(stdout,"%p  %ld\n",p,p->s.size);
         if(p==freep) break;
     }
