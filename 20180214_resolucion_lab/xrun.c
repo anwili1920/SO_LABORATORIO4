@@ -2,12 +2,12 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <math.h>
-
-void *xmalloc (size_t nbytes);
+#include "xalloc.h"
+ 
 
 int main(void)
 { unsigned int x,unidad,base;
-  unsigned int *pt;
+  void *pt;
 
   unidad=1024; 
   x=0;
