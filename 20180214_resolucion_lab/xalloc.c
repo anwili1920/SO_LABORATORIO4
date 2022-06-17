@@ -179,10 +179,8 @@ int sizeh(){
 }
 void xprintq(){
 	Header* p;
-    printf("  %x\n",(void*) freep);
-    char c; 
     for(p=freep->s.ptr;;p=p->s.ptr){
-        printf("%x  %ld\n",(void*)p,p->s.size);
+        fprintf(stdout,"%p  %ld\n",p,p->s.size);
         if(p==freep) break;
     }
     printf("\n");
