@@ -182,23 +182,31 @@ void xfree(void *ap)
 
 void *xrealloc(void * ptr, size_t size)
 {
-	/*Header  *p, *prevp;
-	p= (header*)ptr;// lo casteo 
+	Header  *p ;
+	
+	p= (header*)ptr;// lo casteo  
 	if(p.s.size>size){//consiste en disminuir
 		// se debe cumplir lo del hueco tamaño minimo, y debo compactarlo si es adyacente a un espacio 
-		size_t tamEspacio= (p->s.size-nunits)*sizeof(Align),minimotam= sizeof(Header)+1;;   //Aqui lo que quede en p->s.size será el espacio que sobra
+		size_t tamEspacio= (p->s.size-size)*sizeof(Align),minimotam= sizeof(Header)+1;   //Aqui lo que quede en p->s.size será el espacio que sobra
 			if(tamEspacio >= minimotam){ // si dicho tamaño es mayor o igual al espacio mínimo permitido, entonces se ejecuta todo normal
 				// de todas formas debo intentar compactar el hueco con un espacio adyacente???????? PREGUNTAR
-				p->s.size -= nunits;
+				p->s.size -= size;
 				p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
-				p->s.size = nunits;//le asigna su nuevo tamaño
+				p->s.size = size;//le asigna su nuevo tamaño
 			}else{ // en este punto debo verificar si se puede o no compactar con un adyacente
-
-				prevp->s.ptr = p->s.ptr; // de no poder generarse el espacio minimo necesario ni compactarlo, entonces se ocupa todo
+				if (/*preguntar condicion*/) { // si se puede compactar los uno
+					p->s.size -= size;
+					p+= (p->s.size/tam1HeadUAlign);// muevo el puntero 
+					p->s.ptr-= (p->s.size/tam1HeadUAlign);// ahora el siguiente comienza desde antes
+					p->s.ptr->s.size += (p->s.size/tam1HeadUAlign);// le agrego tamaño al adyacente
+					p->s.size = size;//le asigna su nuevo tamaño
+					return p;
+				}else return p; // de no poder generarse el espacio minimo necesario ni compactarlo, entonces se mantiene el tamaño
 			}
 		
 	}else{//consiste en aumentar tamaño
-
-	}*/
+		
+		return p;
+	}
 	return NULL;
 }
