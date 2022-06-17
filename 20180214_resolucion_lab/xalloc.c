@@ -12,7 +12,7 @@
 
 #include <unistd.h>
 #include "xalloc.h"
-
+#include <stdio.h>
 /*
  * Definicion de la cabecera para huecos y bloques. 
  * La union con un campo de tipo Align fuerza que el tama~no
@@ -179,10 +179,10 @@ int sizeh(){
 }
 void xprintq(){
 	Header* p;
-    printf("Freep : %x\n", freep);
+    printf("  %x\n",(void*) freep);
     char c; 
     for(p=freep->s.ptr;;p=p->s.ptr){
-        printf("%x  %d\n",p,p->s.size);
+        printf("%x  %ld\n",(void*)p,p->s.size);
         if(p==freep) break;
     }
     printf("\n");
