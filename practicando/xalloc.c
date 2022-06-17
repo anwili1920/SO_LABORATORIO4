@@ -107,12 +107,13 @@ void *xmalloc (size_t nbytes)
 	   que apunta freep, hasta que encuentra uno que satisface la peticion
 	   o da toda una vuelta a la lista (no hay espacio suficiente)
 	*/
+	minimotam= sizeof(head)+1; //unidades bytes
 	for (p= prevp->s.ptr; ; prevp = p, p = p->s.ptr) {
 		if (p->s.size >= nunits) {  /* big enough */
 			if (p->s.size == nunits)  /* exactly */
 				prevp->s.ptr = p->s.ptr;
 			else {  /* allocate tail end  */ // AQUI ES DONDE COMIENZA EL PUNTO 2
-				size_t tamEspacio= p->s.size-nunits; //punto 2: Aqui lo que quede en p->s.size será el espacio que sobra
+				size_t tamEspacio= (p->s.size-nunits)*sizeof(align); //punto 2: Aqui lo que quede en p->s.size será el espacio que sobra, en bytes
 				if(tamEspacio >= minimotam){//punto 2: si dicho tamaño es mayor o igual al espacio mínimo permitido, entonces se ejecuta todo normal
 					p->s.size -= nunits;
 					//p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes en unidades cabecera
@@ -181,5 +182,23 @@ void xfree(void *ap)
 
 void *xrealloc(void * ptr, size_t size)
 {
+	/*Header  *p, *prevp;
+	p= (header*)ptr;// lo casteo 
+	if(p.s.size>size){//consiste en disminuir
+		// se debe cumplir lo del hueco tamaño minimo, y debo compactarlo si es adyacente a un espacio 
+		size_t tamEspacio= (p->s.size-nunits)*sizeof(align),minimotam= sizeof(head)+1;;   //Aqui lo que quede en p->s.size será el espacio que sobra
+			if(tamEspacio >= minimotam){ // si dicho tamaño es mayor o igual al espacio mínimo permitido, entonces se ejecuta todo normal
+				// de todas formas debo intentar compactar el hueco con un espacio adyacente???????? PREGUNTAR
+				p->s.size -= nunits;
+				p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
+				p->s.size = nunits;//le asigna su nuevo tamaño
+			}else{ // en este punto debo verificar si se puede o no compactar con un adyacente
+
+				prevp->s.ptr = p->s.ptr; // de no poder generarse el espacio minimo necesario ni compactarlo, entonces se ocupa todo
+			}
+		
+	}else{//consiste en aumentar tamaño
+
+	}*/
 	return NULL;
 }
