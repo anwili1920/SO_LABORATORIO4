@@ -114,7 +114,7 @@ void *xmalloc (size_t nbytes)
 			else {  /* allocate tail end */
 				p->s.size -= nunits;
 				//p+= p->s.size; // aqui mueve el inicio del puntero size bytes siguientes en unidades cabecera
-				tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
+				
 				p+= (p->s.size/tam1HeadUAlign);// lo transformo a unidades cabeza
 				p->s.size = nunits;//le asigna su nuevo tamaño
 			}
@@ -135,7 +135,7 @@ void *xmalloc (size_t nbytes)
 void xfree(void *ap)
 {
 	Header *bp, *p;
-
+	size_t tam1HeadUAlign=(sizeof(Header)+sizeof(Align)-1)/sizeof(Align);
 	bp = (Header *)ap - 1;  /* point to block header */
 
 	/*
@@ -159,14 +159,14 @@ void xfree(void *ap)
 
 
 	/* Comprueba compactacion con hueco posterior */
-	if (bp + bp->s.size == p->s.ptr) {  /* join to upper nbr */
-		bp->s.size += p->s.ptr->s.size;
+	if (bp + (bp->s.size/tam1HeadUAlign) == p->s.ptr) {  /* join to upper nbr */
+		bp->s.size += (p->s.ptr->s.size/tam1HeadUAlign);
 		bp->s.ptr = p->s.ptr->s.ptr;
 	} else
 		 bp->s.ptr = p->s.ptr;
 
 	/* Comprueba compactacion con hueco anterior */
-	if (p + p->s.size == bp) {         /* join to lower nbr */
+	if (p + (p->s.size/tam1HeadUAlign) == bp) {         /* join to lower nbr */
 		p->s.size += bp->s.size;
 		p->s.ptr = bp->s.ptr;
 	} else
